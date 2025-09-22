@@ -1,0 +1,116 @@
+local-k3d: Spin up a local k3d cluster with Argo Workflows and Traefik ingress
+
+Overview
+- This repo provides a set of scripts to quickly create a local Kubernetes cluster using k3d, install Argo Workflows, expose the Argo UI through Traefik, and create an admin ServiceAccount for UI/CLI access.
+- Default host/ports for the Argo UI via Traefik: http://argo.localtest.me:8281
+- Everything is intended for local development only.
+
+Prerequisites
+- Container runtime: Docker Desktop or Colima (with Docker CLI)
+- k3d installed and available in PATH: https://k3d.io/
+- kubectl installed and available in PATH
+- curl and gunzip (gzip) for CLI downloads
+- macOS users (optional): Homebrew to simplify installing dependencies and the argo CLI
+
+Optional: install tools via Brewfile (macOS)
+- From the repo root: brew bundle
+
+Quick start (script order)
+1) Create the k3d cluster
+   bash scripts/install-k3d.sh
+   Notes:
+   - Exposes Traefik HTTP on host 8281 -> cluster LB 80
+   - Exposes Traefik HTTPS on host 8443 -> cluster LB 443
+   - Exposes Kubernetes API on host 6550
+
+2) Install Argo Workflows (and the argo CLI if needed)
+   bash scripts/install-argo.sh
+   - Installs Argo Workflows into the argo namespace (can override ARGO_NS)
+   - Waits for argo-server and workflow-controller to be ready
+
+3) Expose the Argo UI via Traefik Ingress (optional but recommended)
+   bash scripts/setup-argo-ingress.sh
+   - Applies k8s/argo-ui-ingress.yaml (Traefik IngressRoute + ServersTransport)
+   - Default UI URL: http://argo.localtest.me:8281
+   - To override host: ARGO_INGRESS_HOST=myhost.localtest.me bash scripts/setup-argo-ingress.sh
+
+4) Create an Argo admin ServiceAccount and get a token
+   bash scripts/setup-argo-admin.sh
+   - Writes instructions and a bearer token to tmp/argo-admin-instructions.txt
+   - Use the token to log in to the UI or via the argo CLI
+
+5) Verify with a sample workflow
+   argo submit --watch \
+     https://raw.githubusercontent.com/argoproj/argo-workflows/v3.5.8/examples/hello-world.yaml \
+     -n argo
+
+   Or, use helper scripts that log in with the created ServiceAccount and submit:
+   - bash scripts/submit-hello-world.sh
+   - bash scripts/submit-workflow.sh <FILE_OR_URL> [--watch]
+
+Access the Argo UI
+- If you ran setup-argo-ingress.sh:
+  - Open: http://argo.localtest.me:8281 (or your ARGO_INGRESS_HOST + K3D_HTTP_PORT)
+  - Log in using the bearer token from tmp/argo-admin-instructions.txt
+- Alternatively, port-forward without ingress:
+  kubectl -n argo port-forward svc/argo-server 2746:2746
+  Then open http://localhost:2746
+
+Tear down
+- Delete the k3d cluster:
+  bash scripts/destroy-k3d.sh            # deletes the default cluster (k3s-default)
+  bash scripts/destroy-k3d.sh mycluster  # deletes a named cluster
+
+Troubleshooting
+- Check Traefik logs (routing/UI issues):
+  bash scripts/traefik-logs.sh
+  bash scripts/traefik-logs.sh -f --since=1h --outfile
+- Ensure your kubectl context is set to a k3d context. Most scripts auto-detect, but you can override with K3D_CONTEXT.
+- If images pull slowly on first run, components might take a while to become Ready. Scripts use generous rollout timeouts.
+- If the UI host doesn’t resolve, localtest.me resolves to 127.0.0.1 automatically. If you choose a different host, add it to /etc/hosts.
+- Seeing "Forbidden" when logging into the Argo UI (e.g., Argo v3.7.x)? Re-run: bash scripts/setup-argo-admin.sh. It now configures Argo RBAC (policy.csv) to grant admin to the created ServiceAccount (argo-admin by default). Then log in using the token written to tmp/argo-admin-instructions.txt.
+
+Environment variables
+- Common
+  - K3D_CONTEXT: Kubernetes context to use (auto-detected k3d context by default)
+
+- scripts/install-k3d.sh
+  - K3D_CLUSTER: Cluster name (default: k3s-default)
+  - K3D_AGENTS: Number of agent nodes (default: 2)
+  - K3D_API_PORT: Host port for Kubernetes API (default: 6550)
+  - K3D_HTTP_PORT: Host port mapped to LB 80 (default: 8281)
+  - K3D_HTTPS_PORT: Host port mapped to LB 443 (default: 8443)
+
+- scripts/install-argo.sh
+  - ARGO_VERSION: Argo Workflows version (default: v3.5.8)
+  - K3D_CONTEXT: Override the kube context
+  - ARGO_NS: Namespace (default: argo)
+
+- scripts/setup-argo-ingress.sh
+  - K3D_CONTEXT: Override the kube context
+  - ARGO_NS: Namespace (default: argo)
+  - ARGO_INGRESS_FILE: Path to ingress manifest (default: k8s/argo-ui-ingress.yaml)
+  - ARGO_INGRESS_HOST: Hostname for ingress (default inside manifest: argo.localtest.me)
+  - K3D_HTTP_PORT: Host HTTP port (default: 8281)
+
+- scripts/setup-argo-admin.sh
+  - K3D_CONTEXT: Override the kube context
+  - ARGO_NS: Namespace (default: argo)
+  - SA_NAME: ServiceAccount name (default: argo-admin)
+  - K3D_HTTP_PORT: Host HTTP port (default: 8281)
+  - ARGO_INGRESS_HOST: Hostname for UI if using ingress (optional)
+
+- scripts/traefik-logs.sh
+  - K3D_CONTEXT: Override the kube context
+  - TRAEFIK_NS: Namespace where Traefik runs (default: kube-system)
+
+Kubernetes manifests in this repo
+- k8s/argo-ui-ingress.yaml
+  - Traefik IngressRoute to expose argo-server on HTTP via the k3d Traefik load balancer
+  - Uses a Traefik ServersTransport to skip TLS verification when connecting to argo-server (local dev only)
+  - Default host: argo.localtest.me → change via ARGO_INGRESS_HOST or edit the file
+
+Notes
+- These scripts are idempotent where possible and safe to re-run.
+- All artifacts generated by helper scripts are written under tmp/.
+- Do not use these defaults (especially cluster-admin bindings) in production.
