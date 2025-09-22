@@ -1,0 +1,32 @@
+# ZITADEL Helm values for local k3d with step-ca and CNPG
+# Generated from: zitadel_k3d_stepca.md (section 5)
+zitadel:
+  # Replace with your own random 32+ chars masterkey before install
+  masterkey: "REPLACE_WITH_32+_RANDOM"
+
+  configmapConfig:
+    ExternalDomain: "zita.localtest.me"
+    ExternalSecure: true
+
+  secretConfig:
+    Database:
+      Postgres:
+        Host: "pg-zita-rw.zitadel.svc.cluster.local"
+        Port: 5432
+        Database: "zitadel"
+        User: "zitadel"
+        Password: "zitadelpw"
+        SSL:
+          Mode: "disable"
+
+ingress:
+  enabled: true
+  className: traefik
+  hosts:
+    - host: "zita.localtest.me"
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts: ["zita.localtest.me"]
+      secretName: zita-tls

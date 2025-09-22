@@ -1,0 +1,30 @@
+# StepClusterIssuer and provisioner password Secret for cert-manager step-issuer
+# NOTE: spec.caBundle must be a base64-encoded PEM (bytes). This template expects a base64 value.
+# Generated from: zitadel_k3d_stepca.md (section 2c)
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: step-provisioner-password
+  namespace: cert-manager
+  labels:
+    app.kubernetes.io/name: step-provisioner-password
+    app.kubernetes.io/part-of: local-k3d
+    app.kubernetes.io/component: certificates
+    app.kubernetes.io/managed-by: scripts
+stringData:
+  password: "igvsWQtdd9fjjuoYG4wuQ1ERPAEDU1De"
+---
+apiVersion: certmanager.step.sm/v1beta1
+kind: StepClusterIssuer
+metadata:
+  name: step-ca-cluster-issuer
+spec:
+  url: https://step-certificates.step-system.svc.cluster.local:9000
+  # Base64-encoded PEM of the root CA certificate
+  caBundle: "REPLACE_WITH_CA_BUNDLE_B64"
+  provisioner:
+    name: "admin"
+    passwordRef:
+      name: step-provisioner-password
+      key: password
