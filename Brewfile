@@ -1,0 +1,5 @@
+brew "k9s"
+brew "k3d"
+brew "kubectl"
+brew "helm"
+cask "docker-desktop"
