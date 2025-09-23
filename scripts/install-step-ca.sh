@@ -71,19 +71,4 @@ echo "[INFO] Installing/Upgrading step-issuer in namespace 'cert-manager'..."
 helm upgrade --install step-issuer smallstep/step-issuer \
   --namespace cert-manager --create-namespace
 
-# Apply StepClusterIssuer if file looks populated
-if [[ ! -f "$ISSUER_FILE" ]]; then
-  echo "[WARN] $ISSUER_FILE not found. Create it from k8s/step-cluster-issuer.yaml template and set caBundle/password."
-  exit 0
-fi
-
-if grep -q "REPLACE_WITH_" "$ISSUER_FILE"; then
-  echo "[WARN] $ISSUER_FILE contains placeholders. Edit it to include your step-ca root CA and provisioner password, then run:"
-  echo "       kubectl apply -f $ISSUER_FILE"
-  exit 0
-fi
-
-echo "[INFO] Applying StepClusterIssuer from $ISSUER_FILE ..."
-kubectl apply -f "$ISSUER_FILE"
-
 echo "[DONE] step-ca, step-issuer installed, and StepClusterIssuer applied (if populated)."
