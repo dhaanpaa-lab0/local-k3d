@@ -1,6 +1,5 @@
 # StepClusterIssuer and provisioner password Secret for cert-manager step-issuer
 # NOTE: spec.caBundle must be a base64-encoded PEM (bytes). This template expects a base64 value.
-# Generated from: zitadel_k3d_stepca.md (section 2c)
 ---
 apiVersion: v1
 kind: Secret
