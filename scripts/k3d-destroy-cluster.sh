@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# destroy-k3d.sh
+# destroy-k3d-cluster.sh
 # Destroys a k3d cluster created locally.
 #
 # Usage:
-#   bash scripts/destroy-k3d.sh [CLUSTER_NAME]
+#   bash scripts/destroy-k3d-cluster.sh [CLUSTER_NAME]
 #
 # Behavior:
 #   - If CLUSTER_NAME is provided as the first argument, that cluster will be deleted.
@@ -13,9 +13,9 @@ set -euo pipefail
 #   - Otherwise, it defaults to the standard k3d default name: "k3s-default".
 #
 # Examples:
-#   bash scripts/destroy-k3d.sh                 # deletes k3s-default
-#   bash scripts/destroy-k3d.sh my-cluster      # deletes my-cluster
-#   K3D_CLUSTER=my-cluster bash scripts/destroy-k3d.sh
+#   bash scripts/destroy-k3d-cluster.sh                 # deletes k3s-default
+#   bash scripts/destroy-k3d-cluster.sh my-cluster      # deletes my-cluster
+#   K3D_CLUSTER=my-cluster bash scripts/destroy-k3d-cluster.sh
 #
 
 command_exists() { command -v "$1" >/dev/null 2>&1; }

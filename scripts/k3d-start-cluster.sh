@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# start-k3d.sh
+# start-k3d-cluster.sh
 # Starts an existing k3d cluster (without recreating it).
 #
 # Usage:
-#   bash scripts/start-k3d.sh [CLUSTER_NAME]
+#   bash scripts/start-k3d-cluster.sh [CLUSTER_NAME]
 #
 # Behavior:
 #   - If CLUSTER_NAME is provided as the first argument, that cluster will be started.
@@ -13,9 +13,9 @@ set -euo pipefail
 #   - Otherwise, it defaults to the standard k3d default name: "k3s-default".
 #
 # Examples:
-#   bash scripts/start-k3d.sh                 # starts k3s-default
-#   bash scripts/start-k3d.sh my-cluster      # starts my-cluster
-#   K3D_CLUSTER=my-cluster bash scripts/start-k3d.sh
+#   bash scripts/start-k3d-cluster.sh                 # starts k3s-default
+#   bash scripts/start-k3d-cluster.sh my-cluster      # starts my-cluster
+#   K3D_CLUSTER=my-cluster bash scripts/start-k3d-cluster.sh
 #
 
 command_exists() { command -v "$1" >/dev/null 2>&1; }

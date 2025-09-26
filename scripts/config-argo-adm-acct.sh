@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# setup-argo-admin.sh
+# config-argo-adm-acct.sh
 # Creates an Argo Workflows admin ServiceAccount and writes usage instructions to tmp/.
 # - Targets a k3d/k3s cluster context similar to other scripts in this repo.
 # - By default uses namespace "argo" (configurable with ARGO_NS).
@@ -17,8 +17,8 @@ set -euo pipefail
 #   ARGO_INGRESS_HOST   Host for ingress if set up (e.g., argo.localtest.me). Optional.
 #
 # Usage:
-#   bash scripts/setup-argo-admin.sh
-#   ARGO_NS=argo SA_NAME=argo-admin bash scripts/setup-argo-admin.sh
+#   bash scripts/config-argo-adm-acct.sh
+#   ARGO_NS=argo SA_NAME=argo-admin bash scripts/config-argo-adm-acct.sh
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# setup-argo-ingress.sh
+# config-argo-ingress.sh
 # Sets up an Ingress for the Argo Workflows UI (argo-server) on a local k3d/k3s cluster.
 # - Applies the manifest at k8s/argo-ui-ingress.yaml by default.
 # - Ensures the "argo" namespace exists (configurable via ARGO_NS).
@@ -17,9 +17,9 @@ set -euo pipefail
 #   K3D_HTTP_PORT       Host port forwarded to Traefik HTTP entrypoint (LB 80). Default: 8281
 #
 # Usage:
-#   bash scripts/setup-argo-ingress.sh
-#   ARGO_INGRESS_HOST=argo.dev.localtest.me bash scripts/setup-argo-ingress.sh
-#   K3D_CONTEXT=k3d-k3s-default ARGO_NS=argo bash scripts/setup-argo-ingress.sh
+#   bash scripts/config-argo-ingress.sh
+#   ARGO_INGRESS_HOST=argo.dev.localtest.me bash scripts/config-argo-ingress.sh
+#   K3D_CONTEXT=k3d-k3s-default ARGO_NS=argo bash scripts/config-argo-ingress.sh
 #
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

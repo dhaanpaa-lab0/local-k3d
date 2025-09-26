@@ -13,7 +13,7 @@ set -euo pipefail
 #   (host/port configurable via ARGO_INGRESS_HOST + K3D_HTTP_PORT). If no ingress is found,
 #   falls back to a temporary port-forward to localhost:2746.
 # - Obtains a short-lived bearer token for the ServiceAccount (24h) using kubectl; falls back
-#   to a token secret if necessary, similar to scripts/setup-argo-admin.sh
+#   to a token secret if necessary, similar to scripts/config-argo-adm-acct.sh
 #
 # Requirements:
 # - argo CLI installed. If missing, run: bash scripts/install-argo.sh

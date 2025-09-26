@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# stop-k3d.sh
+# stop-k3d-cluster.sh
 # Stops a running k3d cluster (without deleting it).
 #
 # Usage:
-#   bash scripts/stop-k3d.sh [CLUSTER_NAME]
+#   bash scripts/stop-k3d-cluster.sh [CLUSTER_NAME]
 #
 # Behavior:
 #   - If CLUSTER_NAME is provided as the first argument, that cluster will be stopped.
@@ -13,9 +13,9 @@ set -euo pipefail
 #   - Otherwise, it defaults to the standard k3d default name: "k3s-default".
 #
 # Examples:
-#   bash scripts/stop-k3d.sh                  # stops k3s-default
-#   bash scripts/stop-k3d.sh my-cluster       # stops my-cluster
-#   K3D_CLUSTER=my-cluster bash scripts/stop-k3d.sh
+#   bash scripts/stop-k3d-cluster.sh                  # stops k3s-default
+#   bash scripts/stop-k3d-cluster.sh my-cluster       # stops my-cluster
+#   K3D_CLUSTER=my-cluster bash scripts/stop-k3d-cluster.sh
 #
 
 command_exists() { command -v "$1" >/dev/null 2>&1; }

@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/component: certificates
     app.kubernetes.io/managed-by: scripts
 stringData:
-  password: "igvsWQtdd9fjjuoYG4wuQ1ERPAEDU1De"
+  password: "BLAH-blah-blah"
 ---
 apiVersion: certmanager.step.sm/v1beta1
 kind: StepClusterIssuer

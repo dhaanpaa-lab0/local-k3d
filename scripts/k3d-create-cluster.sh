@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# install-k3d.sh
+# create-k3d-cluster.sh
 # Creates a local k3d cluster with HTTP and HTTPS ports exposed on the host.
 # - Exposes Traefik HTTP on host ${K3D_HTTP_PORT:-8281} -> LB 80
 # - Exposes Traefik HTTPS on host ${K3D_HTTPS_PORT:-8443} -> LB 443
@@ -15,8 +15,8 @@ set -euo pipefail
 #   K3D_HTTPS_PORT  Host port forwarded to LB port 443. Default: 8443
 #
 # Usage:
-#   bash scripts/install-k3d.sh
-#   K3D_CLUSTER=mycluster K3D_AGENTS=1 bash scripts/install-k3d.sh
+#   bash scripts/create-k3d-cluster.sh
+#   K3D_CLUSTER=mycluster K3D_AGENTS=1 bash scripts/create-k3d-cluster.sh
 #
 
 K3D_CLUSTER="${K3D_CLUSTER:-k3s-default}"
