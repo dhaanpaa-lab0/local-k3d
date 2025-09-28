@@ -1,49 +1,3 @@
-# Welcome to Tilt!
-#   To get you started as quickly as possible, we have created a
-#   starter Tiltfile for you.
-#
-#   Uncomment, modify, and delete any commands as needed for your
-#   project's configuration.
-
-
-# Output diagnostic messages
-#   You can print log messages, warnings, and fatal errors, which will
-#   appear in the (Tiltfile) resource in the web UI. Tiltfiles support
-#   multiline strings and common string operations such as formatting.
-#
-#   More info: https://docs.tilt.dev/api.html#api.warn
-print("""
------------------------------------------------------------------
-✨ Hello Tilt! This appears in the (Tiltfile) pane whenever Tilt
-   evaluates this file.
------------------------------------------------------------------
-""".strip())
-warn('ℹ️ Open {tiltfile_path} in your favorite editor to get started.'.format(
-    tiltfile_path=config.main_path))
-
-
-# Build Docker image
-#   Tilt will automatically associate image builds with the resource(s)
-#   that reference them (e.g. via Kubernetes or Docker Compose YAML).
-#
-#   More info: https://docs.tilt.dev/api.html#api.docker_build
-#
-# docker_build('registry.example.com/my-image',
-#              context='.',
-#              # (Optional) Use a custom Dockerfile path
-#              dockerfile='./deploy/app.dockerfile',
-#              # (Optional) Filter the paths used in the build
-#              only=['./app'],
-#              # (Recommended) Updating a running container in-place
-#              # https://docs.tilt.dev/live_update_reference.html
-#              live_update=[
-#                 # Sync files from host to container
-#                 sync('./app', '/src/'),
-#                 # Execute commands inside the container when certain
-#                 # paths change
-#                 run('/src/codegen.sh', trigger=['./app/api'])
-#              ]
-# )
 
 
 # Apply Kubernetes manifests
@@ -82,16 +36,7 @@ warn('ℹ️ Open {tiltfile_path} in your favorite editor to get started.'.forma
 #
 #   More info: https://docs.tilt.dev/local_resource.html
 #
-# local_resource('install-helm',
-#                cmd='which helm > /dev/null || brew install helm',
-#                # `cmd_bat`, when present, is used instead of `cmd` on Windows.
-#                cmd_bat=[
-#                    'powershell.exe',
-#                    '-Noninteractive',
-#                    '-Command',
-#                    '& {if (!(Get-Command helm -ErrorAction SilentlyContinue)) {scoop install helm}}'
-#                ]
-# )
+local_resource('install-brewfile', cmd='brew bundle install', auto_init=False, trigger_mode=TRIGGER_MODE_MANUAL)
 
 
 # Extensions are open-source, pre-packaged functions that extend Tilt
@@ -99,32 +44,22 @@ warn('ℹ️ Open {tiltfile_path} in your favorite editor to get started.'.forma
 #   More info: https://github.com/tilt-dev/tilt-extensions
 #
 load('ext://git_resource', 'git_checkout')
+load('ext://helm_remote', 'helm_remote')
 
+# # Render the cert-manager Helm chart from Jetstack with CRDs enabled
+# cm_yaml = helm_remote(
+#     chart='cert-manager',
+#     repo_url='https://charts.jetstack.io',
+#     version='v1.14.5',  # adjust as needed
+#     namespace='cert-manager',
+#     arguments=[
+#         '--set', 'installCRDs=true',
+#     ],
+    
+# )
 
-# Organize logic into functions
-#   Tiltfiles are written in Starlark, a Python-inspired language, so
-#   you can use functions, conditionals, loops, and more.
-#
-#   More info: https://docs.tilt.dev/tiltfile_concepts.html
-#
-def tilt_demo():
-    # Tilt provides many useful portable built-ins
-    # https://docs.tilt.dev/api.html#modules.os.path.exists
-    if os.path.exists('tilt-avatars/Tiltfile'):
-        # It's possible to load other Tiltfiles to further organize
-        # your logic in large projects
-        # https://docs.tilt.dev/multiple_repos.html
-        load_dynamic('tilt-avatars/Tiltfile')
-    watch_file('tilt-avatars/Tiltfile')
-    git_checkout('https://github.com/tilt-dev/tilt-avatars.git',
-                 checkout_dir='tilt-avatars')
+# # Apply the rendered YAML to the cluster
+# k8s_yaml(cm_yaml)
 
-
-# Edit your Tiltfile without restarting Tilt
-#   While running `tilt up`, Tilt watches the Tiltfile on disk and
-#   automatically re-evaluates it on change.
-#
-#   To see it in action, try uncommenting the following line with
-#   Tilt running.
-# tilt_demo()
-print("XYZZY")
+# # Optional: present as a distinct resource in the Tilt UI
+# k8s_resource('cert-manager', labels=['infra'])
