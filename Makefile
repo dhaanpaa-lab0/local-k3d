@@ -8,4 +8,4 @@ setup:
 	touch ./shared/.gitkeep
 clean:
 	@rm -rfv tmp/*
-	@mkdir -pv /tmp
+	@mkdir -pv tmp

@@ -1,5 +1,3 @@
-
-
 # Apply Kubernetes manifests
 #   Tilt will build & push any necessary images, re-deploying your
 #   resources as they change.
@@ -45,21 +43,3 @@ local_resource('install-brewfile', cmd='brew bundle install', auto_init=False, t
 #
 load('ext://git_resource', 'git_checkout')
 load('ext://helm_remote', 'helm_remote')
-
-# # Render the cert-manager Helm chart from Jetstack with CRDs enabled
-# cm_yaml = helm_remote(
-#     chart='cert-manager',
-#     repo_url='https://charts.jetstack.io',
-#     version='v1.14.5',  # adjust as needed
-#     namespace='cert-manager',
-#     arguments=[
-#         '--set', 'installCRDs=true',
-#     ],
-    
-# )
-
-# # Apply the rendered YAML to the cluster
-# k8s_yaml(cm_yaml)
-
-# # Optional: present as a distinct resource in the Tilt UI
-# k8s_resource('cert-manager', labels=['infra'])
