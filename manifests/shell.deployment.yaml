@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shell
+  labels:
+    app: shell
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shell
+  template:
+    metadata:
+      labels:
+        app: shell
+    spec:
+      containers:
+      - name: shell
+        image: ubuntu:latest
+        command: ["/bin/bash"]
+        args: ["-c", "sleep infinity"]
+        volumeMounts:
+        - name: h
+          mountPath: /h
+        - name: wrk
+          mountPath: /wrk
+        - name: hl
+          mountPath: /hl
+        - name: ht
+          mountPath: /ht
+      volumes:
+      - name: h
+        hostPath:
+          path: /h
+          type: DirectoryOrCreate
+      - name: wrk
+        hostPath:
+          path: /wrk
+          type: DirectoryOrCreate
+      - name: hl
+        hostPath:
+          path: /hl
+          type: DirectoryOrCreate
+      - name: ht
+        hostPath:
+          path: /ht
+          type: DirectoryOrCreate
