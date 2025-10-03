@@ -6,6 +6,8 @@
 #
 # k8s_yaml(['k8s/deployment.yaml', 'k8s/service.yaml'])
 
+k8s_yaml('manifests/shell.deployment.yaml')
+
 
 # Customize a Kubernetes resource
 #   By default, Kubernetes resource names are automatically assigned
