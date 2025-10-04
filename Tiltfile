@@ -1,3 +1,5 @@
+allow_k8s_contexts('lk3d-cluster')
+
 # Apply Kubernetes manifests
 #   Tilt will build & push any necessary images, re-deploying your
 #   resources as they change.
@@ -7,7 +9,7 @@
 # k8s_yaml(['k8s/deployment.yaml', 'k8s/service.yaml'])
 
 k8s_yaml('manifests/shell.deployment.yaml')
-
+k8s_yaml('manifests/example-init.deployment.yaml')
 
 # Customize a Kubernetes resource
 #   By default, Kubernetes resource names are automatically assigned

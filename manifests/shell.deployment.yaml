@@ -19,6 +19,7 @@ spec:
         image: ubuntu:latest
         command: ["/bin/bash"]
         args: ["-c", "sleep infinity"]
+        
         volumeMounts:
         - name: h
           mountPath: /h

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-init
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-init
+  template:
+    metadata:
+      labels:
+        app: example-init
+    spec:
+      initContainers:
+      - name: uuid-writer
+        image: busybox:latest
+        command: ['sh', '-c', 'cat /proc/sys/kernel/random/uuid | tr -d "-" > /h/MESSAGE']
+        volumeMounts:
+        - name: shared-data
+          mountPath: /h
+      containers:
+      - name: main
+        image: busybox:latest
+        command: ['sh', '-c', 'cat /h/MESSAGE && sleep 3600']
+        volumeMounts:
+        - name: shared-data
+          mountPath: /h
+      volumes:
+      - name: shared-data
+        emptyDir: {}
