@@ -47,3 +47,22 @@ local_resource('install-brewfile', cmd='brew bundle install', auto_init=False, t
 #
 load('ext://git_resource', 'git_checkout')
 load('ext://helm_remote', 'helm_remote')
+
+# Argo Workflows
+#   Install Argo Workflows using Helm
+#   Trigger manually from Tilt UI to install
+helm_remote(
+    'argo-workflows',
+    repo_name='argo',
+    repo_url='https://argoproj.github.io/argo-helm',
+    namespace='argo',
+    create_namespace=True,
+    set=['server.extraArgs={--auth-mode=server}']
+)
+
+k8s_resource(
+    'argo-workflows-server',
+    port_forwards=['2746:2746'],
+    auto_init=False,
+    trigger_mode=TRIGGER_MODE_MANUAL
+)

@@ -32,6 +32,7 @@ brew "yq"             # YAML processor
 brew "stern"          # Tail multiple pod logs
 tap "fluxcd/tap"
 brew "fluxcd/tap/flux" # GitOps toolkit
+brew "argo"           # Argo Workflows CLI
 
 # --- Container runtimes & CLIs ---
 brew "podman"         # Podman CLI (Docker alternative)
