@@ -112,3 +112,6 @@ fabric.properties
 tmp/
 work/
 local/
+
+# Environment variables
+.env

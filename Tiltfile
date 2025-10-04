@@ -1,5 +1,24 @@
 allow_k8s_contexts('lk3d-cluster')
 
+# Load environment variables from .env file if it exists
+def load_dotenv():
+    if os.path.exists('.env'):
+        for line in str(local('cat .env', quiet=True)).strip().split('\n'):
+            if line and not line.startswith('#') and '=' in line:
+                key, value = line.split('=', 1)
+                key = key.strip()
+                value = value.strip().strip('"').strip("'")
+                os.putenv(key, value)
+        print("Loaded environment variables from .env file")
+    else:
+        print("No .env file found, skipping environment variable loading")
+
+# Load .env file
+load_dotenv()
+
+# Configuration
+REGISTRY = 'lk3d-cluster-registry:5949'
+
 # Apply Kubernetes manifests
 #   Tilt will build & push any necessary images, re-deploying your
 #   resources as they change.
@@ -10,6 +29,15 @@ allow_k8s_contexts('lk3d-cluster')
 
 k8s_yaml('manifests/shell.deployment.yaml')
 k8s_yaml('manifests/example-init.deployment.yaml')
+k8s_yaml('manifests/dev-shell.deployment.yaml')
+k8s_yaml('manifests/argo-config.configmap.yaml')
+
+# Build and push dev-shell image to local k3d registry
+docker_build(
+    REGISTRY + '/dev-shell',
+    context='./dev-shell',
+    dockerfile='./dev-shell/Dockerfile'
+)
 
 # Customize a Kubernetes resource
 #   By default, Kubernetes resource names are automatically assigned

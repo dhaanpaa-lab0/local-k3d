@@ -21,28 +21,28 @@ spec:
         args: ["-c", "sleep infinity"]
         
         volumeMounts:
-        - name: h
-          mountPath: /h
-        - name: wrk
+        - name: shared
+          mountPath: /shr
+        - name: work
           mountPath: /wrk
-        - name: hl
-          mountPath: /hl
-        - name: ht
-          mountPath: /ht
+        - name: local
+          mountPath: /host_local
+        - name: tmp
+          mountPath: /host_tmp
       volumes:
-      - name: h
+      - name: shared
         hostPath:
-          path: /h
+          path: /shr
           type: DirectoryOrCreate
-      - name: wrk
+      - name: work
         hostPath:
           path: /wrk
           type: DirectoryOrCreate
-      - name: hl
+      - name: local
         hostPath:
-          path: /hl
+          path: /host_local
           type: DirectoryOrCreate
-      - name: ht
+      - name: tmp
         hostPath:
-          path: /ht
+          path: /host_tmp
           type: DirectoryOrCreate

@@ -12,8 +12,8 @@ k3d cluster create lk3d-cluster \
   --agents 2 \
   --servers 1 \
   --registry-create lk3d-cluster-registry:0.0.0.0:5949 \
-  --volume "$D/tmp:/ht@all" \
-  --volume "$D/local:/hl@all" \
+  --volume "$D/tmp:/host_tmp@all" \
+  --volume "$D/local:/host_local@all" \
   --volume "$D/work:/wrk@all" \
-  --volume "$D/local:/h@all"
+  --volume "$D/shared:/shr@all"
 

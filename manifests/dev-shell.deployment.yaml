@@ -15,44 +15,49 @@ spec:
         app: dev-shell
     spec:
       containers:
-      - name: dev-shell
-        image: lk3d-cluster-registry:5949/dev-shell:latest
-        command: ["/bin/sh"]
-        args: ["-c", "while true; do sleep 30; done"]
-        env:
-        - name: PORT
-          value: "8080"
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
+        - name: dev-shell
+          image: lk3d-cluster-registry:5949/dev-shell:latest
+          command: ["/bin/sh"]
+          args: ["-c", "while true; do sleep 30; done"]
+          env:
+            - name: PORT
+              value: "8080"
+            - name: LK3D_ARGO_WF_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: argo-config
+                  key: LK3D_ARGO_WF_SERVER
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
 
-        volumeMounts:
-        - name: h
-          mountPath: /h
-        - name: wrk
-          mountPath: /wrk
-        - name: hl
-          mountPath: /hl
-        - name: ht
-          mountPath: /ht
+          volumeMounts:
+            - name: shared
+              mountPath: /shr
+            - name: work
+              mountPath: /wrk
+            - name: local
+              mountPath: /host_local
+            - name: tmp
+              mountPath: /host_tmp
       volumes:
-      - name: h
-        hostPath:
-          path: /h
-          type: DirectoryOrCreate
-      - name: wrk
-        hostPath:
-          path: /wrk
-          type: DirectoryOrCreate
-      - name: hl
-        hostPath:
-          path: /hl
-          type: DirectoryOrCreate
-      - name: ht
-        hostPath:
-          path: /ht
-          type: DirectoryOrCreate
+        - name: shared
+          hostPath:
+            path: /shr
+            type: DirectoryOrCreate
+        - name: work
+          hostPath:
+            path: /wrk
+            type: DirectoryOrCreate
+        - name: local
+          hostPath:
+            path: /host_local
+            type: DirectoryOrCreate
+        - name: tmp
+          hostPath:
+            path: /host_tmp
+            type: DirectoryOrCreate
