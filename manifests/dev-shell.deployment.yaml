@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-shell
+  labels:
+    app: dev-shell
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dev-shell
+  template:
+    metadata:
+      labels:
+        app: dev-shell
+    spec:
+      containers:
+      - name: dev-shell
+        image: lk3d-cluster-registry:5949/dev-shell:latest
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do sleep 30; done"]
+        env:
+        - name: PORT
+          value: "8080"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+        volumeMounts:
+        - name: h
+          mountPath: /h
+        - name: wrk
+          mountPath: /wrk
+        - name: hl
+          mountPath: /hl
+        - name: ht
+          mountPath: /ht
+      volumes:
+      - name: h
+        hostPath:
+          path: /h
+          type: DirectoryOrCreate
+      - name: wrk
+        hostPath:
+          path: /wrk
+          type: DirectoryOrCreate
+      - name: hl
+        hostPath:
+          path: /hl
+          type: DirectoryOrCreate
+      - name: ht
+        hostPath:
+          path: /ht
+          type: DirectoryOrCreate
