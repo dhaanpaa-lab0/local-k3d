@@ -17,6 +17,14 @@ spec:
         image: busybox:latest
         command: ['sh', '-c', 'cat /proc/sys/kernel/random/uuid | tr -d "-" > /h/MESSAGE']
         volumeMounts:
+        - name: shared
+          mountPath: /shr
+        - name: work
+          mountPath: /wrk
+        - name: local
+          mountPath: /host_local
+        - name: tmp
+          mountPath: /host_tmp
         - name: shared-data
           mountPath: /h
       containers:
@@ -24,8 +32,32 @@ spec:
         image: busybox:latest
         command: ['sh', '-c', 'cat /h/MESSAGE && sleep 3600']
         volumeMounts:
+        - name: shared
+          mountPath: /shr
+        - name: work
+          mountPath: /wrk
+        - name: local
+          mountPath: /host_local
+        - name: tmp
+          mountPath: /host_tmp
         - name: shared-data
           mountPath: /h
       volumes:
+      - name: shared
+        hostPath:
+          path: /shr
+          type: DirectoryOrCreate
+      - name: work
+        hostPath:
+          path: /wrk
+          type: DirectoryOrCreate
+      - name: local
+        hostPath:
+          path: /host_local
+          type: DirectoryOrCreate
+      - name: tmp
+        hostPath:
+          path: /host_tmp
+          type: DirectoryOrCreate
       - name: shared-data
         emptyDir: {}

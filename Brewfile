@@ -10,7 +10,7 @@ brew "kustomize"
 cask "freelens"
 brew "jq"
 brew "yq"
-
+brew "xh"
 
 # Brewfile for k8s-home-lab dev tools
 

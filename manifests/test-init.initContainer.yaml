@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-init
+spec:
+  selector:
+    matchLabels:
+      app: test-init
+
+  template:
+    metadata:
+      labels:
+        app: test-init
+
+    spec:
+      containers:
+        - name: test-init
+
+          image: <Image>
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: <Port>
