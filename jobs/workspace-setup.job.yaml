@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: workspace-setup-
+  namespace: default
+spec:
+  ttlSecondsAfterFinished: 86400   # auto-cleanup 24h after completion
+
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: workspace-setup
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: workspace-setup
+          image: lk3d-cluster-registry:5949/workspace-setup:latest
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /wrk
+              name: work-area
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+      volumes:
+        - name: work-area
+          hostPath:
+            path: /wrk
